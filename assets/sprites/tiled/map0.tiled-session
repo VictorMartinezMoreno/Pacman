@@ -1,0 +1,47 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map0.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "map0.tmx": {
+            "scale": 8,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 114,
+                "y": 104.4375
+            }
+        },
+        "map0.tmx#terrein": {
+            "scaleInDock": 16
+        },
+        "terrein.tsx": {
+            "scaleInDock": 8,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/victo/Documentos/Asignaturas GDV/Segundo/Primer cuatrimestre/PVLI/Amigo_Invisible/assets/sprites/tiled",
+    "last.imagePath": "C:/Users/victo/Documentos/Asignaturas GDV/Segundo/Primer cuatrimestre/PVLI/Amigo_Invisible/assets/sprites/tiled",
+    "map.height": 81,
+    "map.lastUsedExportFilter": "Todos los archivos (*)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 2,
+    "map.tileWidth": 2,
+    "map.width": 81,
+    "openFiles": [
+        "map0.tmx"
+    ],
+    "project": "map0.tiled-project",
+    "recentFiles": [
+        "map0.tmx",
+        "terrein.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 2,
+        "width": 2
+    }
+}
