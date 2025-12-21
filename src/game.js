@@ -1,11 +1,12 @@
 import StartMenuScene from './Scenes/StartMenuScene.js'
 import MainScene from './Scenes/MainScene.js'
+import InfoScene from './Scenes/infoScene.js'
 
 const config = {
     type: Phaser.WEBGL,
 	parent: 'game',
     width:  380,
-	height: 372,
+	height: 410,
 	 render: {
         pixelArt: true,
         antialias: false
@@ -28,7 +29,7 @@ const config = {
 			right: true
 		}
     },
-    scene: [StartMenuScene, MainScene],
+    scene: [StartMenuScene, InfoScene, MainScene],
 	title: "Amigo_Invisible",
 	version: "1.0.0"
 };

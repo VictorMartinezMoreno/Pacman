@@ -15,6 +15,8 @@ export default class StartMenuScene extends Phaser.Scene {
         this.load.spritesheet('Inky','./assets/sprites/Inky.png', {frameWidth: 32, frameHeight: 32});
         this.load.spritesheet('Pinky','./assets/sprites/Pinky.png', {frameWidth: 32, frameHeight: 32});
         this.load.spritesheet('Clyde','./assets/sprites/Clyde.png', {frameWidth: 32, frameHeight: 32});
+        this.load.image("smallBall", "./assets/sprites/smallBall.png");
+        this.load.image("largeBall", "./assets/sprites/largeBall.png");
     }
     create() {
         
@@ -22,7 +24,7 @@ export default class StartMenuScene extends Phaser.Scene {
         this.cameras.main.setPostPipeline('CRT');
         
         this.input.keyboard.on('keydown', ()=>{
-            this.scene.start('MainScene');
+            this.scene.start('infoScene', {name: 'tilemap', score: "00000", highScore: "00000", scoreNum: 0});
         });
 
         this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 100, "PAX-MAS", {

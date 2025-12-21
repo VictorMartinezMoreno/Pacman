@@ -1,6 +1,7 @@
 import Ghost from "../Entities/ghost.js"
 import Player from "../Entities/player.js"
 import CTR from "../CTRPipeline.js"
+import Ball from "../ball.js"
 
 export default class MainScene extends Phaser.Scene {
 
@@ -8,8 +9,10 @@ export default class MainScene extends Phaser.Scene {
         super({ key: 'MainScene' }) //id de la escena
     }
 
-    init() {
-
+    init(map) {
+        this.mapName = map.name;
+        this.highScore = map.highScore;
+        this.score = map.scoreNum;
     }
 
     preload() {
@@ -25,13 +28,20 @@ export default class MainScene extends Phaser.Scene {
         this.createAnims();
 
         //Creamos el mapa
+        this.pointMap = [[]];
         this.map = [[]];
         this.createTileMap();
-        this.createMap(this.map);
+        this.createMap(this.map, this.pointMap);
+
+        //Puntos
+        this.placePoints();
+
+        //HUD
+        this.hud();
     }
 
     createTileMap(){
-        this.tilemap = this.make.tilemap({ key: 'tilemap' });
+        this.tilemap = this.make.tilemap({ key: this.mapName});
         const tilesheet = this.tilemap.addTilesetImage('terrein', "tilesheet");
 
         //Creamos layers
@@ -40,12 +50,17 @@ export default class MainScene extends Phaser.Scene {
         this.tilemap.createLayer('ghostsDoor', tilesheet).setScale(2);
         this.tilemap.createLayer('crossing', tilesheet).setScale(2);
         this.tilemap.createLayer('tap', tilesheet).setScale(2).setDepth(3);
+        this.tilemap.createLayer('smallBalls', tilesheet).setScale(2);
+        this.tilemap.createLayer('largeBalls', tilesheet).setScale(2);
 
         //Colocamos objetos
-        this.player = this.tilemap.createFromObjects('player', { name: 'Paxmas', classType: Player, key: "player"});
-        this.player[0].x *= 2; this.player[0].y *= 2;
-        this.player[0].init();
+        //player
+        const players = this.tilemap.createFromObjects('player', { name: 'Paxmas', classType: Player, key: "player"});
+        this.player = players[0];
+        this.player.x *= 2; this.player.y *= 2;
+        this.player.init();
 
+        //fantasmas
         this.ghosts = {
             Blinky: this.tilemap.createFromObjects('ghosts', { name: 'Blinky', classType: Ghost, key: "Blinky"}),
             Inky: this.tilemap.createFromObjects('ghosts', { name: 'Inky', classType: Ghost, key: "Inky"}),
@@ -59,12 +74,14 @@ export default class MainScene extends Phaser.Scene {
         this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2;
     }
 
-    createMap(map){
+    createMap(map, pointMap){
 
         //Obtenemos información de los tiles de cada capa
         const wallsLayerInfo = this.tilemap.layers.find(layer => layer.name === 'walls');
         const doorLayerInfo = this.tilemap.layers.find(layer => layer.name === 'ghostsDoor');
         const crossingLayerInfo = this.tilemap.layers.find(layer => layer.name === 'crossing');
+        const smallBallsLayerInfo = this.tilemap.layers.find(layer => layer.name === 'smallBalls');
+        const largeBallsLayerInfo = this.tilemap.layers.find(layer => layer.name === 'largeBalls');
 
         //Inicializamos el mapa a 0
         for (let row = 0; row < wallsLayerInfo.height; row++) {
@@ -73,6 +90,13 @@ export default class MainScene extends Phaser.Scene {
                 rowData.push(0);
             }
             map.push(rowData);
+        }
+        for (let row = 0; row < wallsLayerInfo.height; row++) {
+            const rowData = [];
+            for (let col = 0; col < wallsLayerInfo.width; col++) {
+                rowData.push(0);
+            }
+            pointMap.push(rowData);
         }
 
         //Inicializamos a 1 las paredes
@@ -95,6 +119,37 @@ export default class MainScene extends Phaser.Scene {
                 if (doorLayerInfo.data[row][col].index !== -1) map[row][col] = 3;
             }
         }
+
+        //Inicializamos a 4 las posiciones de los puntos pequeños
+        for (let row = 0; row < smallBallsLayerInfo.height; row++) {
+            for (let col = 0; col < smallBallsLayerInfo.width; col++) {
+                if (smallBallsLayerInfo.data[row][col].index !== -1) pointMap[row][col] = 4;
+            }
+        }
+
+        //Inicializamos a 5 las posiciones de los puntos grandes
+        for (let row = 0; row < largeBallsLayerInfo.height; row++) {
+            for (let col = 0; col < largeBallsLayerInfo.width; col++) {
+                if (largeBallsLayerInfo.data[row][col].index !== -1) pointMap[row][col] = 5;
+            }
+        }
+    }
+
+    placePoints(){
+        this.points = 0;
+        //Puntos
+        for (let i = 0; i < this.pointMap.length; i++) for (let j = 0; j < this.pointMap[1].length; j++){
+            if (i != this.player.posY || j != this.player.posX){
+                if (this.pointMap[i][j] === 4){
+                    new Ball(this, j*4, i*4, "smallBall", 10);
+                    this.points++;
+                }
+                else if (this.pointMap[i][j] === 5){
+                    new Ball(this, j*4, i*4, "largeBall", 50);
+                    this.points++;
+                }
+            }
+        }
     }
 
     createAnims(){
@@ -105,6 +160,62 @@ export default class MainScene extends Phaser.Scene {
                 frameRate: 45,
                 repeat: -1
             });
+        }
+    }
+
+    hud(){
+        this.scoreText = this.add.text(this.cameras.main.centerX - 100, this.sys.game.canvas.height - 25, "00000", {
+            fontFamily: "arcade_classic",
+            fontSize: 100,
+            color: "#ffffffff"
+        }).setOrigin(1, 0.5).setScale(0.11);
+        this.updatePoints(0);
+
+        this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 30, "HIGH SCORE", {
+            fontFamily: "arcade_classic",
+            fontSize: 100,
+            color: "#ffffffff"
+        }).setOrigin(0.5, 0.5).setScale(0.11);
+
+        this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 15, this.highScore, {
+            fontFamily: "arcade_classic",
+            fontSize: 100,
+            color: "#ffffffff"
+        }).setOrigin(0.5, 0.5).setScale(0.11);
+    }
+
+    updatePoints(points){
+        this.score += points
+
+        let text = ""
+        let howZ = 0;
+
+        for(let i = this.score; i > 0; i = Math.trunc(i/10)) howZ++;
+
+        for (let i = 5-howZ; i > 0; i--) text += "0";
+        text+=this.score;
+
+        this.scoreText.setText(text);
+
+        if (points > 0) this.points--;
+        if (this.points <= 0){
+
+            setTimeout(()=>{
+                let highScore = 0;
+                (this.highScore > this.score)? highScore = this.highScore : highScore = this.score;
+
+                let text2 = ""
+                let howZ2 = 0;
+        
+                for(let i = highScore; i > 0; i = Math.trunc(i/10)) howZ2++;
+        
+                for (let i = 5-howZ2; i > 0; i--) text2 += "0";
+                text2+=highScore;
+
+                this.scene.start("infoScene", {name: "tilemap", score: text, highScore: text2, scoreNum: this.score});
+            }, 3000);
+
+            this.scene.pause();
         }
     }
 }
