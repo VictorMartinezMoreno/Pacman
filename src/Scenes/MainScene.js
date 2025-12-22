@@ -1,4 +1,7 @@
-import Ghost from "../Entities/ghost.js"
+import Blinky from "../Entities/Blinky.js"
+import Inky from "../Entities/Inky.js"
+import Pinky from "../Entities/Pinky.js"
+import Clyde from "../Entities/Clyde.js"
 import Player from "../Entities/player.js"
 import CTR from "../CTRPipeline.js"
 import Ball from "../ball.js"
@@ -32,9 +35,7 @@ export default class MainScene extends Phaser.Scene {
         this.map = [[]];
         this.createTileMap();
         this.createMap(this.map, this.pointMap);
-
-        //Puntos
-        this.placePoints();
+        this.placeObjects();
 
         //HUD
         this.hud();
@@ -52,26 +53,6 @@ export default class MainScene extends Phaser.Scene {
         this.tilemap.createLayer('tap', tilesheet).setScale(2).setDepth(3);
         this.tilemap.createLayer('smallBalls', tilesheet).setScale(2);
         this.tilemap.createLayer('largeBalls', tilesheet).setScale(2);
-
-        //Colocamos objetos
-        //player
-        const players = this.tilemap.createFromObjects('player', { name: 'Paxmas', classType: Player, key: "player"});
-        this.player = players[0];
-        this.player.x *= 2; this.player.y *= 2;
-        this.player.init();
-
-        //fantasmas
-        this.ghosts = {
-            Blinky: this.tilemap.createFromObjects('ghosts', { name: 'Blinky', classType: Ghost, key: "Blinky"}),
-            Inky: this.tilemap.createFromObjects('ghosts', { name: 'Inky', classType: Ghost, key: "Inky"}),
-            Pinky: this.tilemap.createFromObjects('ghosts', { name: 'Pinky', classType: Ghost, key: "Pinky"}),
-            Clyde: this.tilemap.createFromObjects('ghosts', { name: 'Clyde', classType: Ghost, key: "Clyde"}),
-        }
-
-        this.ghosts.Blinky[0].x *= 2; this.ghosts.Blinky[0].y *= 2;
-        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2;
-        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2;
-        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2;
     }
 
     createMap(map, pointMap){
@@ -134,10 +115,29 @@ export default class MainScene extends Phaser.Scene {
             }
         }
     }
+    placeObjects(){
+        //Colocamos objetos
+        //player
+        const players = this.tilemap.createFromObjects('player', { name: 'Paxmas', classType: Player, key: "player"});
+        this.player = players[0];
+        this.player.x *= 2; this.player.y *= 2;
+        this.player.init();
 
-    placePoints(){
-        this.points = 0;
+        //fantasmas
+        this.ghosts = {
+            Blinky: this.tilemap.createFromObjects('ghosts', { name: 'Blinky', classType: Blinky, key: "Blinky"}),
+            Inky: this.tilemap.createFromObjects('ghosts', { name: 'Inky', classType: Inky, key: "Inky"}),
+            Pinky: this.tilemap.createFromObjects('ghosts', { name: 'Pinky', classType: Pinky, key: "Pinky"}),
+            Clyde: this.tilemap.createFromObjects('ghosts', { name: 'Clyde', classType: Clyde, key: "Clyde"}),
+        }
+
+        this.ghosts.Blinky[0].x *= 2; this.ghosts.Blinky[0].y *= 2; this.ghosts.Blinky[0].init();
+        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2; setTimeout(()=>{this.ghosts.Inky[0].init();}, 1000)
+        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2; setTimeout(()=>{this.ghosts.Pinky[0].init();}, 2000) 
+        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2; setTimeout(()=>{this.ghosts.Clyde[0].init();}, 3000)
+
         //Puntos
+        this.points = 0;
         for (let i = 0; i < this.pointMap.length; i++) for (let j = 0; j < this.pointMap[1].length; j++){
             if (i != this.player.posY || j != this.player.posX){
                 if (this.pointMap[i][j] === 4){
@@ -158,6 +158,106 @@ export default class MainScene extends Phaser.Scene {
                 key: "playerMoving",
                 frames: this.anims.generateFrameNumbers("player", { start: 0, end: 6}),
                 frameRate: 45,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists("BlinkyMovingSide")) {
+            this.anims.create({
+                key: "BlinkyMovingSide",
+                frames: this.anims.generateFrameNumbers("Blinky", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("BlinkyMovingUp")) {
+            this.anims.create({
+                key: "BlinkyMovingUp",
+                frames: this.anims.generateFrameNumbers("Blinky", { start: 2, end: 3}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("BlinkyMovingDown")) {
+            this.anims.create({
+                key: "BlinkyMovingDown",
+                frames: this.anims.generateFrameNumbers("Blinky", { start: 4, end: 5}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists("InkyMovingSide")) {
+            this.anims.create({
+                key: "InkyMovingSide",
+                frames: this.anims.generateFrameNumbers("Inky", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("InkyMovingUp")) {
+            this.anims.create({
+                key: "InkyMovingUp",
+                frames: this.anims.generateFrameNumbers("Inky", { start: 2, end: 3}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("InkyMovingDown")) {
+            this.anims.create({
+                key: "InkyMovingDown",
+                frames: this.anims.generateFrameNumbers("Inky", { start: 4, end: 5}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists("PinkyMovingSide")) {
+            this.anims.create({
+                key: "PinkyMovingSide",
+                frames: this.anims.generateFrameNumbers("Pinky", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("PinkyMovingUp")) {
+            this.anims.create({
+                key: "PinkyMovingUp",
+                frames: this.anims.generateFrameNumbers("Pinky", { start: 2, end: 3}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("PinkyMovingDown")) {
+            this.anims.create({
+                key: "PinkyMovingDown",
+                frames: this.anims.generateFrameNumbers("Pinky", { start: 4, end: 5}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists("ClydeMovingSide")) {
+            this.anims.create({
+                key: "ClydeMovingSide",
+                frames: this.anims.generateFrameNumbers("Clyde", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("ClydeMovingUp")) {
+            this.anims.create({
+                key: "ClydeMovingUp",
+                frames: this.anims.generateFrameNumbers("Clyde", { start: 2, end: 3}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("ClydeMovingDown")) {
+            this.anims.create({
+                key: "ClydeMovingDown",
+                frames: this.anims.generateFrameNumbers("Clyde", { start: 4, end: 5}),
+                frameRate: 5,
                 repeat: -1
             });
         }

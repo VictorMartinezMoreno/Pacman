@@ -7,47 +7,6 @@
   <image source="tileSheet.png" width="30" height="6"/>
  </tileset>
  <objectgroup id="7" name="ghosts">
-  <object id="21" x="113" y="87.0909">
-   <point/>
-  </object>
-  <object id="22" x="101.091" y="86.9091">
-   <point/>
-  </object>
-  <object id="23" x="89" y="87.0909">
-   <point/>
-  </object>
-  <object id="24" x="77" y="86.9091">
-   <point/>
-  </object>
-  <object id="25" x="78" y="86">
-   <point/>
-  </object>
-  <object id="26" x="76" y="88">
-   <point/>
-  </object>
-  <object id="27" x="78" y="88">
-   <point/>
-  </object>
-  <object id="28" x="76" y="88">
-   <point/>
-  </object>
-  <object id="29" x="78" y="88">
-   <point/>
-  </object>
-  <object id="30" x="77" y="87.1818">
-   <point/>
-  </object>
-  <object id="31" x="76.0909" y="86.7273"/>
-  <object id="32" x="89" y="86"/>
-  <object id="33" x="101.364" y="87.0909"/>
-  <object id="34" x="101.636" y="87" width="11.9091" height="1.18182"/>
-  <object id="35" x="112.273" y="85.1818" width="1.36364" height="2.36364"/>
-  <object id="36" x="113.636" y="87.0909" width="0.0909091"/>
-  <object id="37" x="108.273" y="87.5455"/>
-  <object id="38" x="101.545" y="87.7273"/>
-  <object id="39" x="100.091" y="86.7273"/>
-  <object id="40" x="101.273" y="86.6364" width="11.9091" height="2.09091"/>
-  <object id="41" x="113.545" y="86.6364"/>
   <object id="56" name="Inky" type="ghost" x="101" y="87">
    <point/>
   </object>
@@ -62,27 +21,6 @@
   </object>
  </objectgroup>
  <objectgroup id="8" name="player">
-  <object id="43" x="113" y="86.8182">
-   <point/>
-  </object>
-  <object id="44" x="113.091" y="85.3636">
-   <point/>
-  </object>
-  <object id="45" x="113.091" y="86.7273">
-   <point/>
-  </object>
-  <object id="46" x="113.091" y="86.2727">
-   <point/>
-  </object>
-  <object id="47" x="113.091" y="87">
-   <point/>
-  </object>
-  <object id="48" x="113.091" y="87">
-   <point/>
-  </object>
-  <object id="60" x="96" y="98">
-   <point/>
-  </object>
   <object id="61" name="Paxmas" type="player" x="95" y="135">
    <point/>
   </object>

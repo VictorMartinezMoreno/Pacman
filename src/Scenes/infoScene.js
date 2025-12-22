@@ -118,11 +118,6 @@ export default class InfoScene extends Phaser.Scene {
         setTimeout(()=>{
             this.scene.start("MainScene", {name: this.mapName, highScore: this.highScore, scoreNum: this.scoreNum});
         }, 11000)
-
-        
-        this.input.keyboard.on('keydown', ()=>{
-            this.scene.start("MainScene", {name: this.mapName, highScore: this.highScore, scoreNum: this.scoreNum});
-        });
     }
 
     parpadeo(){
