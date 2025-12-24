@@ -4,8 +4,13 @@ export default class StartMenuScene extends Phaser.Scene {
     constructor() {
         super({ key: 'StartMenuScene' }) //id de la escena
     }
-    init() {
-
+    init(map) {
+        if (map){
+        this.name = map.name;
+        this.score = map.score;
+        this.highScore = map.highScore;
+        this.scoreNum = map.scoreNum;
+        }
     }
     preload() {
         this.load.tilemapTiledJSON("tilemap", "./assets/sprites/tiled/map0.json");
@@ -17,17 +22,24 @@ export default class StartMenuScene extends Phaser.Scene {
         this.load.spritesheet('Clyde','./assets/sprites/Clyde.png', {frameWidth: 32, frameHeight: 32});
         this.load.image("smallBall", "./assets/sprites/smallBall.png");
         this.load.image("largeBall", "./assets/sprites/largeBall.png");
+        this.load.spritesheet('Eatable','./assets/sprites/eatable.png', {frameWidth: 32, frameHeight: 32});
+        this.load.spritesheet('huyendo','./assets/sprites/huyendo.png', {frameWidth: 32, frameHeight: 32});
+         this.load.spritesheet('death','./assets/sprites/death.png', {frameWidth: 32, frameHeight: 32});
     }
     create() {
-        
+        this.name = this.name || 'tilemap';
+        this.score = this.score || '00000';
+        this.highScore = localStorage.getItem('bestScore') || this.highScore || '00000';
+        this.scoreNum = this.scoreNum || 0;
+
         this.game.renderer.pipelines.addPostPipeline('CRT', CTR);
         this.cameras.main.setPostPipeline('CRT');
         
         this.input.keyboard.on('keydown', ()=>{
-            this.scene.start('infoScene', {name: 'tilemap', score: "00000", highScore: "00000", scoreNum: 0});
+            this.scene.start('infoScene', {name: this.name, score: this.score, highScore: this.highScore, scoreNum: this.scoreNum});
         });
 
-        this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 100, "PAX-MAS", {
+        this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 100, "PAC-MAN", {
             fontFamily: "arcade_classic",
             fontSize: 100,
             color: "#fff700ff"

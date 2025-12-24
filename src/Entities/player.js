@@ -30,6 +30,57 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.speed = 80;
         this.body.setVelocity(this.speed, 0);
+
+        this.events = new Phaser.Events.EventEmitter();
+
+        this.events.on("die", ()=>{
+            this.died = true;
+            this.body.setVelocity(0,0);
+            this.angle = 0;
+            this.anims.play("diying");
+                    
+            this.scene.ghosts.Blinky[0].destroy();
+            this.scene.ghosts.Pinky[0].destroy();
+            this.scene.ghosts.Inky[0].destroy();
+            this.scene.ghosts.Clyde[0].destroy();
+
+            this.scene.scene.resume()
+
+            this.once( Phaser.Animations.Events.ANIMATION_COMPLETE_KEY + "diying", ()=>{
+                    setTimeout(()=>{
+                        let text = ""
+                        let howZ = 0;
+                
+                        for(let i = this.scene.score; i > 0; i = Math.trunc(i/10)) howZ++;
+                        for (let i = 5-howZ; i > 0; i--) text += "0";
+                        text+=this.scene.score;
+    
+                        let highScore = 0;
+                        (this.scene.highScore > this.scene.score)? highScore = this.scene.highScore : highScore = this.scene.score;
+        
+                        let text2 = ""
+
+                        if (highScore === this.scene.score){
+                            let howZ2 = 0;
+                            for(let i = highScore; i > 0; i = Math.trunc(i/10)) howZ2++;
+                            for (let i = 5-howZ2; i > 0; i--) text2 += "0";
+                        }
+                        
+                        text2+=highScore;
+
+                        if (this.scene.lifes > 0){
+                            this.scene.scene.start("MainScene", {name: "tilemap", score: text, highScore: this.scene.highScore, scoreNum: this.scene.score, catchedBalls: this.scene.catchedBalls});
+                            localStorage.setItem('bestScore', this.scene.highScore);
+                        }
+                        else {
+                            localStorage.setItem('bestScore', text2);
+                            this.scene.scene.start("StartMenuScene", {name: "tilemap", score: "00000", highScore: text2, scoreNum: 0});
+                        }
+
+                    }, 2000)
+                }
+            );
+        })
     }
 
     init(){
@@ -43,6 +94,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
     preUpdate(t, dt) {
         super.preUpdate(t, dt); //LLamamos al preUpdate del padre para que las animaciones se ejucten correctamente
 
+        if (!this.died){
         //Actualización de posición
         if (this.body.velocity.x !== 0 || this.body.velocity.y !== 0) this.offset -= (this.speed * dt/1000)
 
@@ -122,7 +174,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
             if (this.posX < 0) {this.posX = this.scene.map[this.posY].length - 2; this.x = (this.scene.map[this.posY].length - 1)*4;}
             if (this.posY < 0) {this.posY = this.scene.map.length - 2; this.y = (this.scene.map.length - 1)*4;}
         }
-        
+    }
     }
 
     changeAnimation(){

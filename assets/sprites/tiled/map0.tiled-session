@@ -8,11 +8,11 @@
     ],
     "fileStates": {
         "map0.tmx": {
-            "scale": 16,
-            "selectedLayer": 5,
+            "scale": 4,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 93.375,
-                "y": 88.28125
+                "x": 61.75,
+                "y": 121.875
             }
         },
         "map0.tmx#terrein": {

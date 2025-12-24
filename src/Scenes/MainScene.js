@@ -16,6 +16,12 @@ export default class MainScene extends Phaser.Scene {
         this.mapName = map.name;
         this.highScore = map.highScore;
         this.score = map.scoreNum;
+
+        if (map.lifes) this.lifes = map.lifes;
+        if (map.catchedBalls) {
+            this.catchedBalls = map.catchedBalls;
+        }
+        else this.catchedBalls = undefined;
     }
 
     preload() {
@@ -35,10 +41,26 @@ export default class MainScene extends Phaser.Scene {
         this.map = [[]];
         this.createTileMap();
         this.createMap(this.map, this.pointMap);
+
+        let Ptext = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "READY!", {
+            fontFamily: "arcade_classic",
+            fontSize: 100,
+            color: "#f2fa07ff"
+        }).setOrigin(0.5, 0.5).setScale(0.5).setDepth(3);
+
+        setTimeout(()=>{this.scene.resume(); Ptext.destroy();}, 2000);
+        this.scene.pause();
+
         this.placeObjects();
+
+        //VIDAS
+        this.lifes = this.lifes || 4;
 
         //HUD
         this.hud();
+
+        //
+        this.eatPoints = 200;
     }
 
     createTileMap(){
@@ -80,6 +102,17 @@ export default class MainScene extends Phaser.Scene {
             pointMap.push(rowData);
         }
 
+        if (this.catchedBalls === undefined){
+            this.catchedBalls = [[]];
+            for (let row = 0; row < wallsLayerInfo.height; row++) {
+                const rowData = [];
+                for (let col = 0; col < wallsLayerInfo.width; col++) {
+                    rowData.push(0);
+                }
+                this.catchedBalls.push(rowData);
+            }
+        }
+
         //Inicializamos a 1 las paredes
         for (let row = 0; row < wallsLayerInfo.height; row++) {
             for (let col = 0; col < wallsLayerInfo.width; col++) {
@@ -114,6 +147,12 @@ export default class MainScene extends Phaser.Scene {
                 if (largeBallsLayerInfo.data[row][col].index !== -1) pointMap[row][col] = 5;
             }
         }
+
+        for (let row = 0; row < this.catchedBalls.length; row++) {
+            for (let col = 0; col < this.catchedBalls[row].length; col++) {
+                if (this.catchedBalls[row][col] === 1) pointMap[row][col] = -1;
+            }
+        }
     }
     placeObjects(){
         //Colocamos objetos
@@ -132,9 +171,9 @@ export default class MainScene extends Phaser.Scene {
         }
 
         this.ghosts.Blinky[0].x *= 2; this.ghosts.Blinky[0].y *= 2; this.ghosts.Blinky[0].init();
-        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2; setTimeout(()=>{this.ghosts.Inky[0].init();}, 1000)
-        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2; setTimeout(()=>{this.ghosts.Pinky[0].init();}, 2000) 
-        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2; setTimeout(()=>{this.ghosts.Clyde[0].init();}, 3000)
+        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2; setTimeout(()=>{this.ghosts.Inky[0].init();}, 3000)
+        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2; setTimeout(()=>{this.ghosts.Pinky[0].init();}, 4000) 
+        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2; setTimeout(()=>{this.ghosts.Clyde[0].init();}, 5000)
 
         //Puntos
         this.points = 0;
@@ -261,6 +300,54 @@ export default class MainScene extends Phaser.Scene {
                 repeat: -1
             });
         }
+        if (!this.anims.exists("eatableAnim")) {
+            this.anims.create({
+                key: "eatableAnim",
+                frames: this.anims.generateFrameNumbers("Eatable", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("lowEatableAnim")) {
+            this.anims.create({
+                key: "lowEatableAnim",
+                frames: this.anims.generateFrameNumbers("Eatable", { frames:[0, 2]}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+
+        if (!this.anims.exists("huyendoSide")) {
+            this.anims.create({
+                key: "huyendoSide",
+                frames: this.anims.generateFrameNumbers("huyendo", { start: 0, end: 1}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("huyendoUp")) {
+            this.anims.create({
+                key: "huyendoUp",
+                frames: this.anims.generateFrameNumbers("huyendo", { start: 2, end: 3}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("huyendoDown")) {
+            this.anims.create({
+                key: "huyendoDown",
+                frames: this.anims.generateFrameNumbers("huyendo", { start: 4, end: 5}),
+                frameRate: 5,
+                repeat: -1
+            });
+        }
+        if (!this.anims.exists("diying")) {
+            this.anims.create({
+                key: "diying",
+                frames: this.anims.generateFrameNumbers("death", { start: 0, end: 15}),
+                frameRate: 20,
+            });
+        }
     }
 
     hud(){
@@ -282,9 +369,13 @@ export default class MainScene extends Phaser.Scene {
             fontSize: 100,
             color: "#ffffffff"
         }).setOrigin(0.5, 0.5).setScale(0.11);
+
+        if (this.lifes > 2) this.add.image(this.cameras.main.centerX + 125, this.sys.game.canvas.height - 25, 'player', 1).setOrigin(0.5, 0.5).setScale(0.5);
+        if (this.lifes > 1) this.add.image(this.cameras.main.centerX + 100, this.sys.game.canvas.height - 25, 'player', 1).setOrigin(0.5, 0.5).setScale(0.5);
+        if (this.lifes > 3) this.add.image(this.cameras.main.centerX + 150, this.sys.game.canvas.height - 25, 'player', 1).setOrigin(0.5, 0.5).setScale(0.5);
     }
 
-    updatePoints(points){
+    updatePoints(points, discountBalls = true){
         this.score += points
 
         let text = ""
@@ -297,7 +388,8 @@ export default class MainScene extends Phaser.Scene {
 
         this.scoreText.setText(text);
 
-        if (points > 0) this.points--;
+        if (points > 0 && discountBalls) this.points--;
+
         if (this.points <= 0){
 
             setTimeout(()=>{
@@ -305,13 +397,14 @@ export default class MainScene extends Phaser.Scene {
                 (this.highScore > this.score)? highScore = this.highScore : highScore = this.score;
 
                 let text2 = ""
-                let howZ2 = 0;
-        
-                for(let i = highScore; i > 0; i = Math.trunc(i/10)) howZ2++;
-        
-                for (let i = 5-howZ2; i > 0; i--) text2 += "0";
+                if (highScore === this.score){
+                    let howZ2 = 0;
+                    for(let i = highScore; i > 0; i = Math.trunc(i/10)) howZ2++;
+                    for (let i = 5-howZ2; i > 0; i--) text2 += "0";
+                }
                 text2+=highScore;
 
+                localStorage.setItem('bestScore', text2);
                 this.scene.start("infoScene", {name: "tilemap", score: text, highScore: text2, scoreNum: this.score});
             }, 3000);
 
