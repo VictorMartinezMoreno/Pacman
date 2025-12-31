@@ -26,6 +26,8 @@ export default class ball extends Phaser.GameObjects.Sprite {
             this.scene.physics.add.overlap(this, this.scene.player, (ball) =>{
                 this.scene.catchedBalls[Math.trunc(this.y/4)][Math.trunc(this.x/4)] = 1;
                 this.scene.updatePoints(ball.points);
+                this.scene.waka();
+                this.scene.playEatable();
                 this.scene.ghosts.Blinky[0].event.emit("eatable");
                 this.scene.ghosts.Pinky[0].event.emit("eatable");
                 this.scene.ghosts.Inky[0].event.emit("eatable");
@@ -37,6 +39,7 @@ export default class ball extends Phaser.GameObjects.Sprite {
             this.scene.physics.add.overlap(this, this.scene.player, (ball) =>{
                 this.scene.catchedBalls[Math.trunc(this.y/4)][Math.trunc(this.x/4)] = 1;
                 this.scene.updatePoints(ball.points);
+                this.scene.waka();
                 ball.destroy();
             });
         }

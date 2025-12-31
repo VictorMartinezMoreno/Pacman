@@ -96,12 +96,15 @@ export default class ghost extends Phaser.GameObjects.Sprite {
                 }).setOrigin(0.5, 0.5).setScale(0.07).setDepth(3);
                 this.scene.updatePoints(this.scene.eatPoints, false);
                 this.scene.eatPoints*=2;
+                this.scene.eat.play();
+                this.scene.playHicking();
                 setTimeout(()=>{this.scene.scene.resume(); Ptext.destroy();}, 500);
                 this.scene.scene.pause();
             }
             else if (!this.huyendo){
                 this.scene.lifes--;
-                setTimeout(()=>{this.scene.player.events.emit('die');}, 500);
+                this.scene.stopMusic();
+                setTimeout(()=>{ this.scene.stopMusic(); this.scene.player.events.emit('die');}, 500);
                 this.scene.scene.pause();
             }
         });
@@ -166,15 +169,18 @@ export default class ghost extends Phaser.GameObjects.Sprite {
     preUpdate(t, dt) {
         super.preUpdate(t, dt); //LLamamos al preUpdate del padre para que las animaciones se ejucten correctamente
 
-        if (this.eatable > 0 && !this.huyendo){
+        if (this.eatable > 0){
 
-            if (this.eatable === this.timeEatable) this.speed = this.lowerSpeed;
+            if (this.eatable === this.timeEatable && !this.huyendo) this.speed = this.lowerSpeed;
 
             this.eatable -= dt;
 
-            if (this.eatable <= 0) this.speed = this.scene.player.speed;
+            if (this.eatable <= 0 && !this.huyendo){
+                this.speed = this.scene.player.speed;
+                this.scene.playSiren();
+            }
 
-            if (this.eatable <= 0 || this.eatable === this.timeEatable - dt){
+            if (this.eatable <= 0 && !this.huyendo || this.eatable === this.timeEatable - dt && !this.huyendo){
                 this.scene.eatPoints = 200;
                 let vx, vy;
                 if (this.body.velocity.y != 0) vy = this.body.velocity.y / Math.abs(this.body.velocity.y);
@@ -304,6 +310,8 @@ export default class ghost extends Phaser.GameObjects.Sprite {
                 if (Math.trunc(rutaElegida.distancia) === 0){
                     this.inHome = true;
                     this.huyendo = false;
+                    if (this.eatable > 0) this.scene.playEatable();
+                    else this.scene.playSiren();
                     this.speed = this.scene.player.speed;
                     this.eatable = 0;
                 }

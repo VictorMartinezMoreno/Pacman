@@ -17,6 +17,7 @@ export default class InfoScene extends Phaser.Scene {
         this.cameras.main.setPostPipeline('CRT');
 
         //this.scene.start('MainScene', {name: "tilemap", highScore: this.highScore});
+        this.sound.add("carga").play();
 
         this.add.text(this.cameras.main.centerX - 130, 40, this.score, {
             fontFamily: "arcade_classic",

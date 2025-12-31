@@ -38,6 +38,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
             this.body.setVelocity(0,0);
             this.angle = 0;
             this.anims.play("diying");
+            this.scene.deathSFX.play();
                     
             this.scene.ghosts.Blinky[0].destroy();
             this.scene.ghosts.Pinky[0].destroy();
@@ -69,10 +70,12 @@ export default class Player extends Phaser.GameObjects.Sprite {
                         text2+=highScore;
 
                         if (this.scene.lifes > 0){
+                            this.scene.stopMusic();
                             this.scene.scene.start("MainScene", {name: "tilemap", score: text, highScore: this.scene.highScore, scoreNum: this.scene.score, catchedBalls: this.scene.catchedBalls});
                             localStorage.setItem('bestScore', this.scene.highScore);
                         }
                         else {
+                            this.scene.stopMusic();
                             localStorage.setItem('bestScore', text2);
                             this.scene.scene.start("StartMenuScene", {name: "tilemap", score: "00000", highScore: text2, scoreNum: 0});
                         }

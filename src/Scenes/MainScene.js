@@ -32,6 +32,7 @@ export default class MainScene extends Phaser.Scene {
 
         this.game.renderer.pipelines.addPostPipeline('CRT', CTR);
         this.cameras.main.setPostPipeline('CRT');
+        this.sound.add("inicio").play();
 
         //Creamos animaciones
         this.createAnims();
@@ -48,7 +49,8 @@ export default class MainScene extends Phaser.Scene {
             color: "#f2fa07ff"
         }).setOrigin(0.5, 0.5).setScale(0.5).setDepth(3);
 
-        setTimeout(()=>{this.scene.resume(); Ptext.destroy();}, 2000);
+        this.sirenSFX = this.sound.add("siren", {loop: true});
+        setTimeout(()=>{this.scene.resume(); Ptext.destroy(); this.sirenSFX.play()}, 5500);
         this.scene.pause();
 
         this.placeObjects();
@@ -61,6 +63,13 @@ export default class MainScene extends Phaser.Scene {
 
         //
         this.eatPoints = 200;
+        this.Waka = 0;
+        this.wa = this.sound.add("Wa");
+        this.ka = this.sound.add("ka");
+        this.eat = this.sound.add("eat");
+        this.deathSFX = this.sound.add("muerte");
+        this.eatableSFX = this.sound.add("eatable", {loop: true});
+        this.hickingSFX = this.sound.add("hiking", {loop: true});
     }
 
     createTileMap(){
@@ -171,9 +180,9 @@ export default class MainScene extends Phaser.Scene {
         }
 
         this.ghosts.Blinky[0].x *= 2; this.ghosts.Blinky[0].y *= 2; this.ghosts.Blinky[0].init();
-        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2; setTimeout(()=>{this.ghosts.Inky[0].init();}, 3000)
-        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2; setTimeout(()=>{this.ghosts.Pinky[0].init();}, 4000) 
-        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2; setTimeout(()=>{this.ghosts.Clyde[0].init();}, 5000)
+        this.ghosts.Inky[0].x *= 2; this.ghosts.Inky[0].y *= 2; setTimeout(()=>{this.ghosts.Inky[0].init();}, 6500)
+        this.ghosts.Pinky[0].x *= 2; this.ghosts.Pinky[0].y *= 2; setTimeout(()=>{this.ghosts.Pinky[0].init();}, 7500) 
+        this.ghosts.Clyde[0].x *= 2; this.ghosts.Clyde[0].y *= 2; setTimeout(()=>{this.ghosts.Clyde[0].init();}, 8500)
 
         //Puntos
         this.points = 0;
@@ -345,7 +354,7 @@ export default class MainScene extends Phaser.Scene {
             this.anims.create({
                 key: "diying",
                 frames: this.anims.generateFrameNumbers("death", { start: 0, end: 15}),
-                frameRate: 20,
+                frameRate: 10,
             });
         }
     }
@@ -391,8 +400,9 @@ export default class MainScene extends Phaser.Scene {
         if (points > 0 && discountBalls) this.points--;
 
         if (this.points <= 0){
-
+            this.stopMusic();
             setTimeout(()=>{
+                this.stopMusic();
                 let highScore = 0;
                 (this.highScore > this.score)? highScore = this.highScore : highScore = this.score;
 
@@ -403,12 +413,44 @@ export default class MainScene extends Phaser.Scene {
                     for (let i = 5-howZ2; i > 0; i--) text2 += "0";
                 }
                 text2+=highScore;
-
                 localStorage.setItem('bestScore', text2);
                 this.scene.start("infoScene", {name: "tilemap", score: text, highScore: text2, scoreNum: this.score});
             }, 3000);
 
             this.scene.pause();
         }
+    }
+
+    waka(){
+        if (this.Waka === 0){
+            this.wa.play();
+            this.Waka = 1;
+        }
+        else{
+            this.ka.play();
+            this.Waka = 0;
+        }
+    }
+
+    playEatable(){
+        this.sirenSFX.stop()
+        this.hickingSFX.stop();
+        this.eatableSFX.play();
+    }
+    playSiren(){
+        this.sirenSFX.play()
+        this.hickingSFX.stop();
+        this.eatableSFX.stop();
+    }
+    playHicking(){
+        this.sirenSFX.stop()
+        this.hickingSFX.play();
+        this.eatableSFX.stop();
+    }
+
+    stopMusic(){
+        this.sirenSFX.stop()
+        this.hickingSFX.stop();
+        this.eatableSFX.stop();
     }
 }

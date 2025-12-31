@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "map0.tmx",
+    "activeFile": "map1.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -16,6 +16,17 @@
             }
         },
         "map0.tmx#terrein": {
+            "scaleInDock": 16
+        },
+        "map1.tmx": {
+            "scale": 4,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 118,
+                "y": 95.125
+            }
+        },
+        "map1.tmx#terrein": {
             "scaleInDock": 16
         },
         "terrein.tsx": {
@@ -32,10 +43,11 @@
     "map.tileWidth": 2,
     "map.width": 81,
     "openFiles": [
-        "map0.tmx"
+        "map1.tmx"
     ],
     "project": "map0.tiled-project",
     "recentFiles": [
+        "map1.tmx",
         "map0.tmx",
         "terrein.tsx"
     ],

@@ -24,7 +24,17 @@ export default class StartMenuScene extends Phaser.Scene {
         this.load.image("largeBall", "./assets/sprites/largeBall.png");
         this.load.spritesheet('Eatable','./assets/sprites/eatable.png', {frameWidth: 32, frameHeight: 32});
         this.load.spritesheet('huyendo','./assets/sprites/huyendo.png', {frameWidth: 32, frameHeight: 32});
-         this.load.spritesheet('death','./assets/sprites/death.png', {frameWidth: 32, frameHeight: 32});
+        this.load.spritesheet('death','./assets/sprites/death.png', {frameWidth: 32, frameHeight: 32});
+
+        this.load.audio("carga", "./assets/sounds/carga.mp3");
+        this.load.audio("eat", "./assets/sounds/eat.mp3");
+        this.load.audio("eatable", "./assets/sounds/eatable.mp3");
+        this.load.audio("hiking", "./assets/sounds/hiking.mp3");
+        this.load.audio("inicio", "./assets/sounds/inicio.mp3");
+        this.load.audio("ka", "./assets/sounds/ka.mp3");
+        this.load.audio("Wa", "./assets/sounds/Wa.mp3");
+        this.load.audio("muerte", "./assets/sounds/muerte.mp3");
+        this.load.audio("siren", "./assets/sounds/siren.mp3");
     }
     create() {
         this.name = this.name || 'tilemap';
@@ -44,6 +54,12 @@ export default class StartMenuScene extends Phaser.Scene {
             fontSize: 100,
             color: "#fff700ff"
         }).setOrigin(0.5, 0.5).setScale(0.35);
+
+        this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "Controls: [W][A][S][D]", {
+            fontFamily: "arcade_classic",
+            fontSize: 100,
+            color: "#9c9c9cff"
+        }).setOrigin(0.5, 0.5).setScale(0.15);
 
         let start = this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 25, "Press any key to start", {
             fontFamily: "arcade_classic",
