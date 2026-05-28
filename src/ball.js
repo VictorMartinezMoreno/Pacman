@@ -7,6 +7,7 @@ export default class ball extends Phaser.GameObjects.Sprite {
 
         this.setOrigin(0.5, 0.5)
         this.setScale(0.65);
+        if (texture === "largeBall") this.setScale(0.65*0.5);
         this.setDepth(0);
 
         this.scene.physics.add.existing(this);

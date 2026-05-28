@@ -28,13 +28,10 @@ export default class StartMenuScene extends Phaser.Scene {
 
         this.load.audio("carga", "./assets/sounds/carga.mp3");
         this.load.audio("eat", "./assets/sounds/eat.mp3");
-        this.load.audio("eatable", "./assets/sounds/eatable.mp3");
-        this.load.audio("hiking", "./assets/sounds/hiking.mp3");
         this.load.audio("inicio", "./assets/sounds/inicio.mp3");
         this.load.audio("ka", "./assets/sounds/ka.mp3");
         this.load.audio("Wa", "./assets/sounds/Wa.mp3");
         this.load.audio("muerte", "./assets/sounds/muerte.mp3");
-        this.load.audio("siren", "./assets/sounds/siren.mp3");
     }
     create() {
         this.name = this.name || 'tilemap';
@@ -49,22 +46,22 @@ export default class StartMenuScene extends Phaser.Scene {
             this.scene.start('infoScene', {name: this.name, score: this.score, highScore: this.highScore, scoreNum: this.scoreNum});
         });
 
-        this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 100, "PAC-MAN", {
+        this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 100, "AVOID-WORK", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#fff700ff"
+            color: "#FF9800"
         }).setOrigin(0.5, 0.5).setScale(0.35);
 
         this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "Controls: [W][A][S][D]", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#9c9c9cff"
+            color: "#ECEFF1"
         }).setOrigin(0.5, 0.5).setScale(0.15);
 
         let start = this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 25, "Press any key to start", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#ffffffff"
+            color: "#ECEFF1"
         }).setOrigin(0.5, 0).setScale(0.1);
 
         this.tweens.add({

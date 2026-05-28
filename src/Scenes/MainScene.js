@@ -46,11 +46,10 @@ export default class MainScene extends Phaser.Scene {
         let Ptext = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, "READY!", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#f2fa07ff"
+            color: "#FF9800"
         }).setOrigin(0.5, 0.5).setScale(0.5).setDepth(3);
 
-        this.sirenSFX = this.sound.add("siren", {loop: true});
-        setTimeout(()=>{this.scene.resume(); Ptext.destroy(); this.sirenSFX.play()}, 5500);
+        setTimeout(()=>{this.scene.resume(); Ptext.destroy();}, 5500);
         this.scene.pause();
 
         this.placeObjects();
@@ -68,8 +67,6 @@ export default class MainScene extends Phaser.Scene {
         this.ka = this.sound.add("ka");
         this.eat = this.sound.add("eat");
         this.deathSFX = this.sound.add("muerte");
-        this.eatableSFX = this.sound.add("eatable", {loop: true});
-        this.hickingSFX = this.sound.add("hiking", {loop: true});
     }
 
     createTileMap(){
@@ -363,20 +360,20 @@ export default class MainScene extends Phaser.Scene {
         this.scoreText = this.add.text(this.cameras.main.centerX - 100, this.sys.game.canvas.height - 25, "00000", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#ffffffff"
+            color: "#ECEFF1"
         }).setOrigin(1, 0.5).setScale(0.11);
         this.updatePoints(0);
 
         this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 30, "HIGH SCORE", {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#ffffffff"
+            color: "#ECEFF1"
         }).setOrigin(0.5, 0.5).setScale(0.11);
 
         this.add.text(this.cameras.main.centerX, this.sys.game.canvas.height - 15, this.highScore, {
             fontFamily: "arcade_classic",
             fontSize: 100,
-            color: "#ffffffff"
+            color: "#ECEFF1"
         }).setOrigin(0.5, 0.5).setScale(0.11);
 
         if (this.lifes > 2) this.add.image(this.cameras.main.centerX + 125, this.sys.game.canvas.height - 25, 'player', 1).setOrigin(0.5, 0.5).setScale(0.5);
@@ -433,24 +430,16 @@ export default class MainScene extends Phaser.Scene {
     }
 
     playEatable(){
-        this.sirenSFX.stop()
-        this.hickingSFX.stop();
-        this.eatableSFX.play();
+        
     }
     playSiren(){
-        this.sirenSFX.play()
-        this.hickingSFX.stop();
-        this.eatableSFX.stop();
+        
     }
     playHicking(){
-        this.sirenSFX.stop()
-        this.hickingSFX.play();
-        this.eatableSFX.stop();
+        
     }
 
     stopMusic(){
-        this.sirenSFX.stop()
-        this.hickingSFX.stop();
-        this.eatableSFX.stop();
+       
     }
 }

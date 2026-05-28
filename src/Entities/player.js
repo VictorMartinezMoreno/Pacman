@@ -185,10 +185,18 @@ export default class Player extends Phaser.GameObjects.Sprite {
         if (this.body.velocity.x != 0 || this.body.velocity.y != 0){
             if (this.anims.isPaused) this.anims.resume();
             if (this.body.velocity.x != 0){
-                if (this.body.velocity.x > 0) this.angle = 0;
-                else this.angle = 180;
+                this.angle = 0;
+                if (this.body.velocity.x > 0){
+                    this.setFlipX(false);
+                }
+                else{
+                    this.setFlipX(true);
+                }
             }
-            else this.angle = 90 * this.body.velocity.y / Math.abs(this.body.velocity.y);
+            else{
+                this.setFlipX(false);
+                this.angle = 90 * this.body.velocity.y / Math.abs(this.body.velocity.y);
+            }
         }
         else this.anims.pause()
     }

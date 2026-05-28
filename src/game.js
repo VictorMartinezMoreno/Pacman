@@ -7,6 +7,7 @@ const config = {
 	parent: 'game',
     width:  380,
 	height: 410,
+    backgroundColor: '#0f1115',
 	 render: {
         pixelArt: true,
         antialias: false

@@ -1,5 +1,21 @@
 /*@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');*/
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background-color: #0d1117 !important; /* Usa el color exacto del fondo de tu juego */
+}
 
+#game {
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background-color: #0d1117 !important; /* Mismo color de fondo */
+}
 @font-face {
   font-family: 'arcade_classic';
   src: url('../assets/fonts/arcade.ttf') format('truetype');
@@ -7,4 +23,11 @@
 h1 {
   text-align: center;
   font-family: 'arcade_classic', monospace;
+}
+.preload-font {
+    font-family: 'arcade_classic';
+    position: absolute;
+    visibility: hidden;
+    height: 0;
+    width: 0;
 }
